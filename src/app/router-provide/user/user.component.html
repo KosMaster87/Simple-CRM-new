@@ -8,41 +8,88 @@
   <mat-icon>add</mat-icon>
 </button>
 
-<button class="logging-col-docRef" (click)="onLogUsers()" [disabled]="loading">
-  {{ loading ? "Lädt..." : "Logging" }}
+<button
+  class="logging-col-docRef"
+  (click)="refreshUsers()"
+  [disabled]="loading"
+>
+  {{ loading ? "wird geladen..." : "jetzt laden." }}
 </button>
 
+@if (!loading) {
 <div class="user-list">
-  @if (this.firebaseService.users$ | async as users; else loading) {
+  @if (firebaseService.users$ | async; as users) {
   <ng-container>
-    @for(user of users; track $index) {
-    <div class="user-card">
-      <mat-card class="example-card" appearance="outlined">
-        <mat-card-header>
-          <mat-card-title>{{ user.name || "Unbekannter Name" }}</mat-card-title>
-          <mat-card-subtitle>{{
-            user.email || "Keine E-Mail"
-          }}</mat-card-subtitle>
-        </mat-card-header>
+    @for (user of users; track $index) {
 
-        <mat-card-content>
-          <p>{{ user.description || "Keine Beschreibung vorhanden." }}</p>
-        </mat-card-content>
+    <mat-card class="example-card" appearance="outlined">
+      <mat-card-header>
+        <mat-card-title>{{
+          user.role || "Angestellter oder Kunde usw."
+        }}</mat-card-title>
 
-        <mat-card-footer class="example-card-footer">
-          <mat-chip-set aria-label="Benutzerinformationen">
-            <mat-chip>{{ user.role || "Unbekannte Rolle" }}</mat-chip>
-          </mat-chip-set>
-        </mat-card-footer>
-      </mat-card>
-    </div>
+        <mat-card-subtitle>{{
+          user.firstName || "Kein Vorname"
+        }}</mat-card-subtitle>
+
+        <mat-card-subtitle>{{
+          user.lastName || "Kein Nachname"
+        }}</mat-card-subtitle>
+
+        <mat-card-subtitle>{{
+          user.email || "Keine E-Mail"
+        }}</mat-card-subtitle>
+
+        <mat-card-subtitle>{{
+          user.mobile || "Keine Telefonnummer"
+        }}</mat-card-subtitle>
+
+        <mat-card-subtitle>{{
+          user.street || "Keine Straße"
+        }}</mat-card-subtitle>
+
+        <mat-card-subtitle>{{
+          user.houseNumber || "Keine Hausnummer"
+        }}</mat-card-subtitle>
+
+        <mat-card-subtitle>{{
+          user.zipCode || "Keine Postleitzahl"
+        }}</mat-card-subtitle>
+
+        <mat-card-subtitle>{{ user.town || "Keine E-Mail" }}</mat-card-subtitle>
+
+        <mat-card-subtitle>{{ user.country || "Kein Land" }}</mat-card-subtitle>
+
+        <mat-card-subtitle>{{
+          user.someMoreSomething || "Keine weitere Information"
+        }}</mat-card-subtitle>
+
+        <mat-card-subtitle>{{
+          user.birthDate || "Kein Geburtsdatum"
+        }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <p>{{ user.description || "Keine Beschreibung vorhanden." }}</p>
+      </mat-card-content>
+
+      <mat-card-footer class="example-card-footer">
+        <mat-chip-set aria-label="Benutzerinformationen">
+          <mat-chip>{{ "Benutzer bearbeiten" }}</mat-chip>
+        </mat-chip-set>
+      </mat-card-footer>
+    </mat-card>
+
     }
   </ng-container>
-  }
 
-  <!-- Ladezustand -->
+  } @else if (error) {
+  <p>Fehler beim Laden der Daten: {{ error }}</p>
+  } @else {
   <ng-template #loading>
     <mat-spinner></mat-spinner>
     <p>Daten werden geladen...</p>
   </ng-template>
+  }
 </div>
+}

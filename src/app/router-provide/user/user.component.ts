@@ -1,37 +1,41 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  inject,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { MaterialSharedModule } from '../../shared/material-module/material-shared.module';
 import { DialogComponent } from '../../mat-modules/dialog/dialog.component';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { FirebaseService } from '../../shared/services/firebase/firebase.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user',
-  imports: [MaterialSharedModule],
+  imports: [MaterialSharedModule, CommonModule],
   templateUrl: './user.component.html',
   styleUrl: './user.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  changeDetection: ChangeDetectionStrategy.OnPush, // Änderungserkennung
 })
 export class UserComponent {
-  private firebaseService = inject(FirebaseService);
+  private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+  public firebaseService = inject(FirebaseService);
   private dialog = inject(MatDialog);
   private dialogRef!: MatDialogRef<DialogComponent>;
-  isDialogOpen = false;
-  loading = false;
+  public error: string | null = null;
+  loading: boolean = false;
+  isDialogOpen: boolean = false;
 
-  longText = `The Chihuahua is a Mexican breed of toy dog. It is named for the
-  Mexican state of Chihuahua and is among the smallest of all dog breeds. It is
-  usually kept as a companion animal or for showing.`;
-
-  onLogUsers() {
+  refreshUsers() {
     this.loading = true;
     this.firebaseService.getUsersRef().subscribe({
       next: () => {
-        console.log('Daten erfolgreich abgerufen');
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: (err) => {
-        console.error('Fehler beim Abrufen der Daten:', err);
         this.loading = false;
+        this.cdr.markForCheck();
       },
     });
   }

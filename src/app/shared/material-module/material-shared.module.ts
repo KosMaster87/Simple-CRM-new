@@ -17,6 +17,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   imports: [
@@ -37,6 +38,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatProgressBarModule,
     MatCardModule,
     MatChipsModule,
+    MatProgressSpinnerModule,
   ],
   exports: [
     MatSidenavModule,
@@ -56,6 +58,7 @@ import { MatChipsModule } from '@angular/material/chips';
     MatProgressBarModule,
     MatCardModule,
     MatChipsModule,
+    MatProgressSpinnerModule,
   ],
 })
 export class MaterialSharedModule {}
