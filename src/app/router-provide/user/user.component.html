@@ -1,5 +1,3 @@
-<p>user works!</p>
-
 <button
   class="add-btn"
   mat-mini-fab
@@ -9,3 +7,42 @@
 >
   <mat-icon>add</mat-icon>
 </button>
+
+<button class="logging-col-docRef" (click)="onLogUsers()" [disabled]="loading">
+  {{ loading ? "Lädt..." : "Logging" }}
+</button>
+
+<div class="user-list">
+  @if (this.firebaseService.users$ | async as users; else loading) {
+  <ng-container>
+    @for(user of users; track $index) {
+    <div class="user-card">
+      <mat-card class="example-card" appearance="outlined">
+        <mat-card-header>
+          <mat-card-title>{{ user.name || "Unbekannter Name" }}</mat-card-title>
+          <mat-card-subtitle>{{
+            user.email || "Keine E-Mail"
+          }}</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <p>{{ user.description || "Keine Beschreibung vorhanden." }}</p>
+        </mat-card-content>
+
+        <mat-card-footer class="example-card-footer">
+          <mat-chip-set aria-label="Benutzerinformationen">
+            <mat-chip>{{ user.role || "Unbekannte Rolle" }}</mat-chip>
+          </mat-chip-set>
+        </mat-card-footer>
+      </mat-card>
+    </div>
+    }
+  </ng-container>
+  }
+
+  <!-- Ladezustand -->
+  <ng-template #loading>
+    <mat-spinner></mat-spinner>
+    <p>Daten werden geladen...</p>
+  </ng-template>
+</div>

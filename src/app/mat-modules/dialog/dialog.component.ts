@@ -21,7 +21,7 @@ export class DialogComponent {
   // item$ = collectionData<Item>(itemCollection);
 
   public data = inject(MAT_DIALOG_DATA);
-  private dialogRef = inject(MatDialogRef<DialogComponent>);
+  // private dialogRef = inject(MatDialogRef<DialogComponent>);
 
   isDialogOpen: boolean = this.data.isDialogOpen || false;
   // user: User = new User();
@@ -39,6 +39,7 @@ export class DialogComponent {
     someMoreSomething: 'Any Place',
     birthDate: new Date().getTime(),
   });
+
   birthDate!: Date;
 
   ngOnInit() {
@@ -47,7 +48,7 @@ export class DialogComponent {
 
   ngOnDestroy() {
     console.table(this.newUser);
-    console.log(this.dialogRef);
+    // console.log(this.dialogRef);
     this.isDialogOpen = false;
   }
 
@@ -55,6 +56,12 @@ export class DialogComponent {
     console.log('Dialog geschlossen durch "cancel".');
   }
 
+  /**
+   * collection: Zum Erstellen einer Referenz auf eine Sammlung in der Firestore-Datenbank.
+   * onSnapshot: Fügt einen Listener hinzu, der auf Änderungen in der Firestore-Datenbank reagiert.
+   *
+   * BehaviorSubject / Verhalten Subjekt: Ein Teil von RxJS, der es ermöglicht, Werte zu speichern und Änderungen in Echtzeit zu verfolgen.
+   */
   addUser() {
     try {
       console.log('Firestore object:', this.firestore);
@@ -64,8 +71,8 @@ export class DialogComponent {
         throw new Error('Firestore ist nicht korrekt initialisiert.');
       }
 
-      // Sammlung 'User' referenzieren
-      const userCollectionRef = collection(this.firestore, 'User');
+      // Sammlung 'users' referenzieren
+      const userCollectionRef = collection(this.firestore, 'users');
 
       // Benutzer hinzufügen
       addDoc(userCollectionRef, { ...this.newUser })
@@ -79,40 +86,4 @@ export class DialogComponent {
       console.error('Fehler beim Erstellen der Collection:', error);
     }
   }
-  // addUser() {
-  //   console.log('Firestore object:', this.firestore);
-  //   console.log('Dialog geschlossen durch "continue".');
-
-  //   try {
-  //     const userCollectionRef = collection(this.firestore, 'User'); // Sammlung erstellen
-  //     addDoc(userCollectionRef, { ...this.newUser }) // Benutzer hinzufügen
-  //       .then((result: any) => {
-  //         console.log('User hinzugefügt: ', result);
-  //       })
-  //       .catch((error) => {
-  //         console.error(
-  //           'Fehler beim Hinzufügen des Benutzers: ',
-  //           error.message
-  //         );
-  //       });
-  //   } catch (error) {
-  //     console.error('Fehler beim Erstellen der Collection: ', error);
-  //   }
-  // }
-
-  // addUser() {
-  //   // this.newUser.birthDate = this.birthDate.getTime();
-
-  //   console.log('Dialog geschlossen durch "continue".');
-
-  //   const userCollectionRef = collection(this.firestore, 'User');
-
-  //   addDoc(userCollectionRef, this.newUser)
-  //     .then((result: any) => {
-  //       console.log('User hinzugefügt: ', result);
-  //     })
-  //     .catch((error) => {
-  //       console.error('Fehler beim Hinzufügen des Benutzers: ', error.message);
-  //     });
-  // }
 }
