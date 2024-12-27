@@ -28,7 +28,8 @@ export class User {
     public birthDate: Date | string,
     public description: string,
     public role: string,
-    public someMoreSomething: string
+    public someMoreSomething: string,
+    public id?: string
   ) {}
 
   toJSON(): UserJSON {

@@ -2,7 +2,8 @@ import { Component, inject } from '@angular/core';
 import { MaterialSharedModule } from '../../shared/material-module/material-shared.module';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { User } from './../../shared/services/interface/user.service';
-import { Firestore, collection, addDoc } from '@angular/fire/firestore';
+import { Firestore } from '@angular/fire/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 
 @Component({
   selector: 'app-dialog',
@@ -28,7 +29,8 @@ export class DialogComponent {
     new Date(),
     'Any Description',
     'Admin',
-    'Any Place'
+    'Any Place',
+    ''
   );
 
   async addUser() {
@@ -41,6 +43,7 @@ export class DialogComponent {
     try {
       const docRef = await addDoc(usersCollection, this.newUser.toJSON());
       console.log('User erfolgreich hinzugefügt:', docRef.id);
+      this.newUser.id = docRef.id;
     } catch (error: any) {
       console.error('Fehler beim Hinzufügen des Benutzers:', error.message);
     }

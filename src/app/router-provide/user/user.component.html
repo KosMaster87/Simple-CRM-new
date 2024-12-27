@@ -8,19 +8,9 @@
   <mat-icon>add</mat-icon>
 </button>
 
-<!-- <button
-  class="logging-col-docRef"
-  (click)="refreshUsers()"
-  [disabled]="loading"
->
-  {{ loading ? "wird geladen..." : "jetzt laden." }}
-</button> -->
-
 <!-- ------------------------------------------------------------------- -->
 
 <div class="user-main-wrapper">
-  <button (click)="addTestUser()">testUser</button>
-
   <div *ngIf="loading; else content">
     <mat-spinner></mat-spinner>
     <p>Daten werden geladen...</p>
@@ -59,7 +49,11 @@
     <!-- Benutzerdetails -->
     <div *ngIf="selectedUserId && (selectedUser$ | async) as selectedUser">
       <h2>Benutzerdetails</h2>
+
       <button mat-button (click)="resetSelection()">Zurück zur Liste</button>
+      <!-- <button mat-button (click)="openEditDialog(selectedUser)">
+        Bearbeiten
+      </button> -->
 
       <mat-card>
         <mat-card-title>{{ selectedUser.role || "Unbekannt" }}</mat-card-title>

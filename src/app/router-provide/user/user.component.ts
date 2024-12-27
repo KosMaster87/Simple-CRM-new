@@ -13,7 +13,7 @@ import { Users } from './../../shared/services/interface/users.service';
 import { User } from './../../shared/services/interface/user.service';
 import { Observable, of } from 'rxjs';
 import { Firestore } from '@angular/fire/firestore';
-import { addDoc, collection } from 'firebase/firestore';
+import { catchError } from 'rxjs/operators';
 
 @Component({
   selector: 'app-user',
@@ -26,15 +26,16 @@ export class UserComponent {
   firestore: Firestore = inject(Firestore);
   public firebaseService = inject(FirebaseService);
   public users$: Observable<Users[]> = this.firebaseService.users$;
-  // public selectedUser$: Observable<User | null> | null = null;
+
   public selectedUser$: Observable<User | null> = of(null);
-  public error: string | null = null;
   public selectedUserId: string | null = null;
+
+  public error: string | null = null;
   private cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
   private dialog = inject(MatDialog);
   private dialogRef!: MatDialogRef<DialogComponent>;
-  loading: boolean = false;
   isDialogOpen: boolean = false;
+  loading: boolean = false;
 
   trackByUserId(index: number, user: Users): string | undefined {
     return user.id;
@@ -43,21 +44,13 @@ export class UserComponent {
   // Benutzer auswählen
   selectUser(userId: string): void {
     this.selectedUserId = userId;
-    this.selectedUser$ = this.firebaseService.getUserById('users', userId);
-  }
-
-  // Benutzerliste neu laden
-  refreshUsers(): void {
-    this.loading = true;
-    this.users$ = this.firebaseService.getUsersRef();
-    this.users$.subscribe({
-      next: () => (this.loading = false),
-      error: (err) => {
-        this.error = 'Fehler beim Laden der Benutzerliste';
-        console.error(err);
-        this.loading = false;
-      },
-    });
+    this.selectedUser$ = this.firebaseService.getUserById('users', userId).pipe(
+      catchError((error) => {
+        this.error = 'Benutzer konnte nicht geladen werden';
+        console.error('Error fetching user:', error);
+        return of(null);
+      })
+    );
   }
 
   // Zurück zur Benutzerliste
@@ -66,24 +59,23 @@ export class UserComponent {
     this.selectedUser$ = of(null);
   }
 
-  // editUser(user: Users): void {
-  //   console.log('Benutzer bearbeiten:', user);
-  //   // Hier können weitere Logiken zur Bearbeitung des Benutzers implementiert werden
-  // }
+  // Benutzerliste neu laden
+  refreshUsers(): void {
+    this.loading = true;
+    this.users$ = this.firebaseService.getUsersRef().pipe(
+      catchError((err) => {
+        this.error = 'Fehler beim Laden der Benutzerliste';
+        console.error('Error fetching user list:', err);
+        this.loading = false;
+        return of([]);
+      })
+    );
 
-  // refreshUsers() {
-  //   this.loading = true;
-  //   this.firebaseService.getUsersRef().subscribe({
-  //     next: () => {
-  //       this.loading = false;
-  //       this.cdr.markForCheck();
-  //     },
-  //     error: (err) => {
-  //       this.loading = false;
-  //       this.cdr.markForCheck();
-  //     },
-  //   });
-  // }
+    this.users$.subscribe(() => {
+      this.loading = false;
+      this.cdr.markForCheck();
+    });
+  }
 
   openDialog() {
     if (this.isDialogOpen) {
@@ -104,37 +96,14 @@ export class UserComponent {
 
     this.dialogRef.afterClosed().subscribe(() => {
       this.isDialogOpen = false;
+      this.cdr.markForCheck();
     });
   }
 
-  newUser: User = new User(
-    'Konstantin',
-    'Aksenov',
-    'Konstantin.Aksenov@dev2k.net',
-    '+595 994221200',
-    'Home-Str.',
-    '187',
-    '9370',
-    'Loma Plata',
-    'Paraguay',
-    new Date(),
-    'Any Description',
-    'Admin',
-    'Any Place'
-  );
-
-  async addTestUser() {
-    const testUserCollection = collection(this.firestore, 'testUser');
-
-    if (!testUserCollection) {
-      throw new Error('Collection reference konnte nicht erstellt werden.');
-    }
-
-    try {
-      const docRef = await addDoc(testUserCollection, this.newUser.toJSON());
-      console.log('User erfolgreich hinzugefügt:', docRef.id);
-    } catch (error: any) {
-      console.error('Fehler beim Hinzufügen des Benutzers:', error.message);
-    }
-  }
+  // openEditDialog(user: User): void {
+  //   this.dialog.open(DialogComponent, {
+  //     data: user,
+  //     autoFocus: false,
+  //   });
+  // }
 }
