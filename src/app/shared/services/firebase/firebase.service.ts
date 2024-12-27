@@ -2,20 +2,21 @@ import { inject, Injectable } from '@angular/core';
 import { collectionData, Firestore, docData } from '@angular/fire/firestore';
 import { collection, doc } from 'firebase/firestore';
 import { Observable } from 'rxjs';
-import { User } from '../interface/user.service';
+import { Users } from './../interface/users.service';
+import { User } from './../interface/user.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class FirebaseService {
   firestore: Firestore = inject(Firestore);
-  public users$: Observable<User[]> = this.getUsersRef(); // Konvention$ + interface
+  public users$: Observable<Users[]> = this.getUsersRef(); // Konvention$ + interface
 
-  getUsersRef(): Observable<User[]> {
+  getUsersRef(): Observable<Users[]> {
     const usersCollection = collection(this.firestore, 'users');
     const observableCollectionData = collectionData(
       usersCollection
-    ) as Observable<User[]>;
+    ) as Observable<Users[]>;
 
     observableCollectionData.subscribe((data) => {
       console.log('Service: Benutzerliste abgerufen:');
@@ -29,4 +30,9 @@ export class FirebaseService {
   //   const documentRef = doc(this.firestore, `${collection_ID}/${document_ID}`);
   //   return docData(documentRef) as Observable<User>;
   // }
+
+  getUserById(collectionId: string, documentId: string): Observable<User> {
+    const userDocRef = doc(this.firestore, `${collectionId}/${documentId}`);
+    return docData(userDocRef, { idField: 'id' }) as Observable<User>;
+  }
 }

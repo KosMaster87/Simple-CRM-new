@@ -25,3 +25,17 @@
 .example-card-footer {
   padding: 16px;
 }
+
+.user-card {
+  margin-bottom: 1rem;
+}
+
+mat-card {
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+mat-spinner {
+  display: block;
+  margin: 2rem auto;
+}

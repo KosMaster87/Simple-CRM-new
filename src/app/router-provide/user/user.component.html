@@ -16,7 +16,68 @@
   {{ loading ? "wird geladen..." : "jetzt laden." }}
 </button>
 
-@if (!loading) {
+<!-- ------------------------------------------------------------------- -->
+
+<div *ngIf="loading; else content">
+  <mat-spinner></mat-spinner>
+  <p>Daten werden geladen...</p>
+</div>
+
+<ng-template #content>
+  <!-- Benutzerliste -->
+  <div *ngIf="!selectedUserId">
+    <h2>Benutzerliste</h2>
+    <button (click)="refreshUsers()" [disabled]="loading">
+      {{ loading ? "Wird geladen..." : "Neu laden" }}
+    </button>
+
+    <mat-card
+      *ngFor="let user of users$ | async; trackBy: trackByUserId"
+      class="user-card"
+    >
+      <mat-card-title>{{ user.role || "Unbekannt" }}</mat-card-title>
+      <mat-card-subtitle
+        >{{ user.firstName || "Vorname fehlt" }}
+        {{ user.lastName || "Nachname fehlt" }}</mat-card-subtitle
+      >
+      <mat-card-actions>
+        <button mat-button (click)="selectUser(user.id!)">
+          Details anzeigen
+        </button>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+
+  <!-- Benutzerdetails -->
+  <div *ngIf="selectedUserId && (selectedUser$ | async) as selectedUser">
+    <h2>Benutzerdetails</h2>
+    <button mat-button (click)="resetSelection()">Zurück zur Liste</button>
+
+    <mat-card>
+      <mat-card-title>{{ selectedUser.role || "Unbekannt" }}</mat-card-title>
+      <mat-card-content>
+        <p>Vorname: {{ selectedUser.firstName }}</p>
+        <p>Nachname: {{ selectedUser.lastName }}</p>
+        <p>E-Mail: {{ selectedUser.email || "Keine E-Mail" }}</p>
+        <p>Telefon: {{ selectedUser.mobile || "Keine Telefonnummer" }}</p>
+        <p>
+          Adresse: {{ selectedUser.street || "Keine Straße" }}
+          {{ selectedUser.houseNumber || "" }}
+        </p>
+        <p>PLZ: {{ selectedUser.zipCode || "Keine PLZ" }}</p>
+        <p>Stadt: {{ selectedUser.town || "Keine Stadt" }}</p>
+        <p>Land: {{ selectedUser.country || "Kein Land" }}</p>
+        <p>Geburtsdatum: {{ selectedUser.birthDate || "Kein Geburtsdatum" }}</p>
+        <p>
+          Beschreibung: {{ selectedUser.description || "Keine Beschreibung" }}
+        </p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</ng-template>
+
+<!-- ------------------------------------------------------------------- -->
+<!-- @if (!loading) {
 <div class="user-list">
   @if (firebaseService.users$ | async; as users) {
   <ng-container>
@@ -92,4 +153,4 @@
   </ng-template>
   }
 </div>
-}
+} -->

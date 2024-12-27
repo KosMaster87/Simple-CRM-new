@@ -1,13 +1,14 @@
 import { Component, inject } from '@angular/core';
 import { MaterialSharedModule } from '../../shared/material-module/material-shared.module';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { User } from './../../models/user.class';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { Users } from './../../shared/services/interface/users.service';
+import { User } from './../../shared/services/interface/user.service';
 import {
   Firestore,
   collection,
   addDoc,
   collectionData,
-} from '@angular/fire/firestore'; // addDoc importieren
+} from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-dialog',
@@ -17,51 +18,29 @@ import {
 })
 export class DialogComponent {
   private firestore = inject(Firestore);
-  // itemCollection = collection(this.firestore, 'User');
-  // item$ = collectionData<Item>(itemCollection);
-
   public data = inject(MAT_DIALOG_DATA);
-  // private dialogRef = inject(MatDialogRef<DialogComponent>);
-
   isDialogOpen: boolean = this.data.isDialogOpen || false;
-  // user: User = new User();
-  // newUser: User = this.data.user || new User();
+  birthDate!: Date;
   newUser: User = new User({
     firstName: 'Konstantin',
     lastName: 'Aksenov',
-    eMail: 'Konstantin.Aksenov@dev2k.net',
+    email: 'Konstantin.Aksenov@dev2k.net',
     mobile: '+595 994221200',
     street: 'Home-Str.',
     houseNumber: 187,
     zipCode: 9370,
     town: 'Loma Plata',
     country: 'Paraguay',
-    someMoreSomething: 'Any Place',
     birthDate: new Date().getTime(),
+    description: 'Any Description',
+    role: 'Admin',
+    someMoreSomething: 'Any Place',
   });
-
-  birthDate!: Date;
 
   ngOnInit() {
     console.log(this.data);
   }
 
-  ngOnDestroy() {
-    console.table(this.newUser);
-    // console.log(this.dialogRef);
-    this.isDialogOpen = false;
-  }
-
-  addCancel() {
-    console.log('Dialog geschlossen durch "cancel".');
-  }
-
-  /**
-   * collection: Zum Erstellen einer Referenz auf eine Sammlung in der Firestore-Datenbank.
-   * onSnapshot: Fügt einen Listener hinzu, der auf Änderungen in der Firestore-Datenbank reagiert.
-   *
-   * BehaviorSubject / Verhalten Subjekt: Ein Teil von RxJS, der es ermöglicht, Werte zu speichern und Änderungen in Echtzeit zu verfolgen.
-   */
   addUser() {
     try {
       console.log('Firestore object:', this.firestore);
