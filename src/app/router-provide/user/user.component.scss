@@ -18,21 +18,24 @@
   gap: 0.5rem;
 }
 
-.example-card {
-  max-width: 400px;
-}
+// .example-card {
+//   max-width: 400px;
+// }
 
-.example-card-footer {
-  padding: 16px;
-}
+// .example-card-footer {
+//   padding: 16px;
+// }
 
 .user-card {
-  margin-bottom: 1rem;
+  // margin-bottom: 1rem;
+  margin: 0.5rem;
+  padding: 0.5rem;
+  background-color: var(--primeColor3);
 }
 
 mat-card {
-  max-width: 600px;
-  margin: 0 auto;
+  max-width: 25vw;
+  // margin: 0 auto;
 }
 
 mat-spinner {

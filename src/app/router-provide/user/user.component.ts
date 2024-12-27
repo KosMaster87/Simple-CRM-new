@@ -12,6 +12,8 @@ import { CommonModule } from '@angular/common';
 import { Users } from './../../shared/services/interface/users.service';
 import { User } from './../../shared/services/interface/user.service';
 import { Observable, of } from 'rxjs';
+import { Firestore } from '@angular/fire/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 
 @Component({
   selector: 'app-user',
@@ -21,6 +23,7 @@ import { Observable, of } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush, // Änderungserkennung
 })
 export class UserComponent {
+  firestore: Firestore = inject(Firestore);
   public firebaseService = inject(FirebaseService);
   public users$: Observable<Users[]> = this.firebaseService.users$;
   // public selectedUser$: Observable<User | null> | null = null;
@@ -102,5 +105,36 @@ export class UserComponent {
     this.dialogRef.afterClosed().subscribe(() => {
       this.isDialogOpen = false;
     });
+  }
+
+  newUser: User = new User(
+    'Konstantin',
+    'Aksenov',
+    'Konstantin.Aksenov@dev2k.net',
+    '+595 994221200',
+    'Home-Str.',
+    '187',
+    '9370',
+    'Loma Plata',
+    'Paraguay',
+    new Date(),
+    'Any Description',
+    'Admin',
+    'Any Place'
+  );
+
+  async addTestUser() {
+    const testUserCollection = collection(this.firestore, 'testUser');
+
+    if (!testUserCollection) {
+      throw new Error('Collection reference konnte nicht erstellt werden.');
+    }
+
+    try {
+      const docRef = await addDoc(testUserCollection, this.newUser.toJSON());
+      console.log('User erfolgreich hinzugefügt:', docRef.id);
+    } catch (error: any) {
+      console.error('Fehler beim Hinzufügen des Benutzers:', error.message);
+    }
   }
 }

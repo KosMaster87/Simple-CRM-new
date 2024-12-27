@@ -8,74 +8,84 @@
   <mat-icon>add</mat-icon>
 </button>
 
-<button
+<!-- <button
   class="logging-col-docRef"
   (click)="refreshUsers()"
   [disabled]="loading"
 >
   {{ loading ? "wird geladen..." : "jetzt laden." }}
-</button>
+</button> -->
 
 <!-- ------------------------------------------------------------------- -->
 
-<div *ngIf="loading; else content">
-  <mat-spinner></mat-spinner>
-  <p>Daten werden geladen...</p>
-</div>
+<div class="user-main-wrapper">
+  <button (click)="addTestUser()">testUser</button>
 
-<ng-template #content>
-  <!-- Benutzerliste -->
-  <div *ngIf="!selectedUserId">
-    <h2>Benutzerliste</h2>
-    <button (click)="refreshUsers()" [disabled]="loading">
-      {{ loading ? "Wird geladen..." : "Neu laden" }}
-    </button>
+  <div *ngIf="loading; else content">
+    <mat-spinner></mat-spinner>
+    <p>Daten werden geladen...</p>
+  </div>
 
-    <mat-card
-      *ngFor="let user of users$ | async; trackBy: trackByUserId"
-      class="user-card"
-    >
-      <mat-card-title>{{ user.role || "Unbekannt" }}</mat-card-title>
-      <mat-card-subtitle
-        >{{ user.firstName || "Vorname fehlt" }}
-        {{ user.lastName || "Nachname fehlt" }}</mat-card-subtitle
+  <ng-template #content>
+    <!-- Benutzerliste -->
+    <div *ngIf="!selectedUserId">
+      <h2>Benutzerliste</h2>
+
+      <button
+        class="logging-col-docRef"
+        (click)="refreshUsers()"
+        [disabled]="loading"
       >
-      <mat-card-actions>
-        <button mat-button (click)="selectUser(user.id!)">
-          Details anzeigen
-        </button>
-      </mat-card-actions>
-    </mat-card>
-  </div>
+        {{ loading ? "Wird geladen..." : "Neu laden" }}
+      </button>
 
-  <!-- Benutzerdetails -->
-  <div *ngIf="selectedUserId && (selectedUser$ | async) as selectedUser">
-    <h2>Benutzerdetails</h2>
-    <button mat-button (click)="resetSelection()">Zurück zur Liste</button>
+      <mat-card
+        *ngFor="let user of users$ | async; trackBy: trackByUserId"
+        class="user-card"
+      >
+        <mat-card-title>{{ user.role || "Unbekannt" }}</mat-card-title>
+        <mat-card-subtitle
+          >{{ user.firstName || "Vorname fehlt" }}
+          {{ user.lastName || "Nachname fehlt" }}</mat-card-subtitle
+        >
+        <mat-card-actions>
+          <button mat-button (click)="selectUser(user.id!)">
+            Details anzeigen
+          </button>
+        </mat-card-actions>
+      </mat-card>
+    </div>
 
-    <mat-card>
-      <mat-card-title>{{ selectedUser.role || "Unbekannt" }}</mat-card-title>
-      <mat-card-content>
-        <p>Vorname: {{ selectedUser.firstName }}</p>
-        <p>Nachname: {{ selectedUser.lastName }}</p>
-        <p>E-Mail: {{ selectedUser.email || "Keine E-Mail" }}</p>
-        <p>Telefon: {{ selectedUser.mobile || "Keine Telefonnummer" }}</p>
-        <p>
-          Adresse: {{ selectedUser.street || "Keine Straße" }}
-          {{ selectedUser.houseNumber || "" }}
-        </p>
-        <p>PLZ: {{ selectedUser.zipCode || "Keine PLZ" }}</p>
-        <p>Stadt: {{ selectedUser.town || "Keine Stadt" }}</p>
-        <p>Land: {{ selectedUser.country || "Kein Land" }}</p>
-        <p>Geburtsdatum: {{ selectedUser.birthDate || "Kein Geburtsdatum" }}</p>
-        <p>
-          Beschreibung: {{ selectedUser.description || "Keine Beschreibung" }}
-        </p>
-      </mat-card-content>
-    </mat-card>
-  </div>
-</ng-template>
+    <!-- Benutzerdetails -->
+    <div *ngIf="selectedUserId && (selectedUser$ | async) as selectedUser">
+      <h2>Benutzerdetails</h2>
+      <button mat-button (click)="resetSelection()">Zurück zur Liste</button>
 
+      <mat-card>
+        <mat-card-title>{{ selectedUser.role || "Unbekannt" }}</mat-card-title>
+        <mat-card-content>
+          <p>Vorname: {{ selectedUser.firstName }}</p>
+          <p>Nachname: {{ selectedUser.lastName }}</p>
+          <p>E-Mail: {{ selectedUser.email || "Keine E-Mail" }}</p>
+          <p>Telefon: {{ selectedUser.mobile || "Keine Telefonnummer" }}</p>
+          <p>
+            Adresse: {{ selectedUser.street || "Keine Straße" }}
+            {{ selectedUser.houseNumber || "" }}
+          </p>
+          <p>PLZ: {{ selectedUser.zipCode || "Keine PLZ" }}</p>
+          <p>Stadt: {{ selectedUser.town || "Keine Stadt" }}</p>
+          <p>Land: {{ selectedUser.country || "Kein Land" }}</p>
+          <p>
+            Geburtsdatum: {{ selectedUser.birthDate || "Kein Geburtsdatum" }}
+          </p>
+          <p>
+            Beschreibung: {{ selectedUser.description || "Keine Beschreibung" }}
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </ng-template>
+</div>
 <!-- ------------------------------------------------------------------- -->
 <!-- @if (!loading) {
 <div class="user-list">
