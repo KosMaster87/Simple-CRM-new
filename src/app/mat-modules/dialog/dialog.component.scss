@@ -1,4 +1,5 @@
 .dialog-wrapper {
+  position: relative;
   flex-direction: column;
   display: flex;
   align-items: center;
@@ -56,4 +57,9 @@ mat-form-field {
 
 // .mat-mdc-form-field-hint {
 //   padding: 0 0;
-// }c
+// }
+
+.dialog-progress-bar {
+  position: absolute;
+  top: 0;
+}

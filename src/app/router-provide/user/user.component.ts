@@ -35,7 +35,7 @@ export class UserComponent {
   private dialog = inject(MatDialog);
   private dialogRef!: MatDialogRef<DialogComponent>;
   isDialogOpen: boolean = false;
-  loading: boolean = false;
+  loading: boolean = true;
 
   trackByUserId(index: number, user: Users): string | undefined {
     return user.id;
@@ -87,9 +87,10 @@ export class UserComponent {
       data: {
         name: 'Mate',
         isDialogOpen: this.isDialogOpen,
+        loading: this.loading,
       },
       autoFocus: false,
-      disableClose: false,
+      disableClose: true,
       enterAnimationDuration: '500ms',
       exitAnimationDuration: '300ms',
     });

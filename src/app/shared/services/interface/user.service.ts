@@ -32,7 +32,7 @@ export class User {
     public id?: string
   ) {}
 
-  toJSON(): UserJSON {
+  public toJSON(): UserJSON {
     return {
       firstName: this.firstName,
       lastName: this.lastName,

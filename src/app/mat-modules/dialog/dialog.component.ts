@@ -15,7 +15,25 @@ export class DialogComponent {
   firestore: Firestore = inject(Firestore);
   public data = inject(MAT_DIALOG_DATA);
   isDialogOpen: boolean = this.data.isDialogOpen || false;
+  loading: boolean = this.data.loading;
   birthDate!: Date;
+
+  // newUser: User = new User(
+  //   '', // Vorname
+  //   '', // Nachname
+  //   '', // E-Mail
+  //   '', // Telefon
+  //   '', // Straße
+  //   '', // Hausnummer
+  //   '', // PLZ
+  //   '', // Stadt
+  //   '', // Land
+  //   new Date(), // Geburtsdatum (optional Standardwert: neues Datum)
+  //   '', // Beschreibung
+  //   '', // Rolle
+  //   '', // Ort
+  //   '' // ID (optional)
+  // );
   newUser: User = new User(
     'Konstantin',
     'Aksenov',
